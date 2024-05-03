@@ -1,7 +1,7 @@
 FROM docker.io/library/eclipse-temurin:21-jdk-alpine AS builder
 
 WORKDIR /src/thinktank
-COPY . .
+COPY src .
 RUN chmod +x ./gradlew
 RUN ./gradlew clean bootJar
 
@@ -16,7 +16,7 @@ RUN addgroup -g ${USER_GID} ${USER_NAME} && \
 
 USER ${USER_NAME}
 WORKDIR /opt/thinktank
-COPY --from=builder --chown=${USER_UID}:${USER_GID} /src/advshop/build/libs/*.jar app.jar
+COPY --from=builder --chown=${USER_UID}:${USER_GID} /src/thinktank/build/libs/*.jar app.jar
 
 EXPOSE 8080
 
