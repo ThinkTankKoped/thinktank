@@ -12,7 +12,7 @@ import java.util.List;
 @Transactional
 public class DashboardServiceImpl implements DashboardService{
     private final DashboardRepository dashboardRepository;
-    private final DashboardService dashboardService;
+//    private final DashboardService dashboardService;
     @Override
     public Dashboard addDashboard(Dashboard dashboard) {
         if (dashboard.getEducatorsname() == null || dashboard.getStudentname() == null) {
