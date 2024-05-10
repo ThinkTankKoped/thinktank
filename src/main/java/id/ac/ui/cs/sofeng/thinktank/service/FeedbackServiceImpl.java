@@ -42,7 +42,14 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void deleteFeedback(int id) {
-
+        feedbackRepository.findById(id).ifPresent(feedback -> {
+            try {
+                Files.deleteIfExists(Paths.get(feedback.getDocumentPath()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            feedbackRepository.deleteById(id);
+        });
     }
 
     @Override
