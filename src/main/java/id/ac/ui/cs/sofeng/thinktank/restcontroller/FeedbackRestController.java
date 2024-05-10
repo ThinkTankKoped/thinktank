@@ -25,4 +25,9 @@ public class FeedbackRestController {
         }
         return feedback;
     }
+
+    @GetMapping("/deleteFeedback/{id}")
+    public void deleteFeedback(@PathVariable int id) {
+        feedbackService.deleteFeedback(id);
+    }
 }
