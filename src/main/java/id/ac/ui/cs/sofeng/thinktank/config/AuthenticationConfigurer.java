@@ -19,19 +19,19 @@ public class AuthenticationConfigurer {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests((requests) -> requests.requestMatchers("/").permitAll()
-                        .requestMatchers("/home").permitAll()
-                        .requestMatchers("/register").permitAll()
-                        .requestMatchers("/css/**")
-                        .permitAll().requestMatchers("/js/**")
-                        .permitAll().requestMatchers("/img/**")
-                        .permitAll().requestMatchers("/scss/**")
-                        .permitAll().requestMatchers("/fonts/**").permitAll()
+        return http.authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/", "/home", "/register", "/css/**", "/js/**", "/img/**", "/scss/**", "/fonts/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(httpSecurityFormLoginConfigurer -> {
                     httpSecurityFormLoginConfigurer.loginPage("/login").permitAll()
                             .defaultSuccessUrl("/", true)
                             .failureUrl("/login?error=true");
-                }).build();
+                })
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID"))
+                .build();
     }
 }
