@@ -1,6 +1,7 @@
 package id.ac.ui.cs.sofeng.thinktank.controller;
 import id.ac.ui.cs.sofeng.thinktank.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,12 +30,14 @@ public class StudentController {
         student1.setAttendance(student.getAttendance());
         student1.setProgress(student.getProgress());
         studentService.createNewStudent(student);
-        return "redirect:/student/list";
+        return "redirect:/home";
     }
 
     @GetMapping("/list")
     public String list(Model model) {
+        String educatorsname = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Student> students = studentService.getAllStudent();
+        model.addAttribute("educatorsname", educatorsname);
         model.addAttribute("students", students);
         return "student/studentList";
     }
