@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASHBOARD</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        #cartItems {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .dashboard {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+            padding: 20px;
+            width: 80%;
+            font-size: 1.2em;
+        }
+
+        .dashboard p {
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .dashboard button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .dashboard button:hover {
+            background-color: #444;
+        }
+        #DeleteDashboardCard {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 200px;
+            font-size: 1.2em;
+        }
+
+    </style>
+</head>
+<body>
+<h1>DASHBOARD</h1>
+<div id="cartItems">
+        <div class="card dashboard" th:each="dashboardItem, stat : ${dashboard}" >
+            <div class="card-body">
+                <h2 class="card-title" th:text="${dashboardItem.studentname}"></h2>
+                <p class="card-text" th:text="'NPM: ' + ${students[stat.index].npm}"></p>
+                <p class="card-text" th:text="'Grades: ' + ${students[stat.index].grades}"></p>
+                <p class="card-text" th:text="'Attendance: ' + ${students[stat.index].attendance}"></p>
+                <p class="card-text" th:text="'Progress: ' + ${students[stat.index].progress}"></p>
+                <button class="delete-btn btn btn-danger" th:attr="data-id=${dashboardItem.id}, data-product-id=${dashboardItem.studentname}">Delete</button>
+            </div>
+    </div>
+</div>
+<div class="DeleteDashboardCard">
+    <form action="/dashboardmain/delete/john_doe" method="get">
+        <input type="submit" value="Delete Dashboard" />
+    </form>
+</div>
+</body>
+</html>

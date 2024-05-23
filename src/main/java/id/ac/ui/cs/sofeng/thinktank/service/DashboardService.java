@@ -6,4 +6,5 @@ public interface DashboardService {
     void removeStudent(long id);
     void deleteDashboard(String educatorname);
     List<Dashboard> findDashboardByEducator(String educatorname);
+    Dashboard findDashboardByStudentName(String studentname);
 }

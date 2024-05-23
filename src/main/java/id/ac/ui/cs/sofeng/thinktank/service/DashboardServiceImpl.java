@@ -18,7 +18,9 @@ public class DashboardServiceImpl implements DashboardService{
         if (dashboard.getEducatorsname() == null || dashboard.getStudentname() == null) {
             return null;
         }
-        else if (dashboardRepository.findByEducatorsname(dashboard.getEducatorsname()) != null) {
+        Dashboard existingDashboard = dashboardRepository.findByStudentname(dashboard.getStudentname());
+        if (existingDashboard != null) {
+            // If it does, return null or throw an exception
             return null;
         }
         return dashboardRepository.save(dashboard);
@@ -36,16 +38,21 @@ public class DashboardServiceImpl implements DashboardService{
 
     @Override
     public void deleteDashboard(String educatorname) {
-        if (dashboardRepository.findByEducatorsname(educatorname) == null) {
+        if (dashboardRepository.findAllByEducatorsname(educatorname) == null) {
             return;
         }
         else {
-            dashboardRepository.deleteByEducatorsname(educatorname);
+            dashboardRepository.deleteAllByEducatorsname(educatorname);
         }
     }
 
     @Override
     public List<Dashboard> findDashboardByEducator(String educatorname) {
         return dashboardRepository.findAllByEducatorsname(educatorname);
+    }
+
+    @Override
+    public Dashboard findDashboardByStudentName(String studentname) {
+        return dashboardRepository.findByStudentname(studentname);
     }
 }
