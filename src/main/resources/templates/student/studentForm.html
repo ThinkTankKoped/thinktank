@@ -1,0 +1,21 @@
+<html lang="en">
+<head> <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORM</title></head>
+<body>
+<h1>Student Form</h1>
+<form action="/student/studentform" method="post">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name"><br>
+    <label for="npm">NPM:</label><br>
+    <input type="text" id="npm" name="npm"><br>
+    <label for="grades">Grades:</label><br>
+    <input type="number" id="grades" name="grades" step="0.01" min="0"><br>
+    <label for="attendance">Attendance:</label><br>
+    <input type="number" id="attendance" name="attendance" min="0"><br>
+    <label for="progress">Progress:</label><br>
+    <input type="number" id="progress" name="progress" min="0" max="100"><br>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>
