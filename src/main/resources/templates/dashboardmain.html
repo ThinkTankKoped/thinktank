@@ -81,12 +81,19 @@
                 <p class="card-text" th:text="'Grades: ' + ${students[stat.index].grades}"></p>
                 <p class="card-text" th:text="'Attendance: ' + ${students[stat.index].attendance}"></p>
                 <p class="card-text" th:text="'Progress: ' + ${students[stat.index].progress}"></p>
-                <button class="delete-btn btn btn-danger" th:attr="data-id=${dashboardItem.id}, data-product-id=${dashboardItem.studentname}">Delete</button>
+                <form th:action="@{/dashboardmain/remove/{id}(id=${dashboardItem.id})}" method="get">
+                    <button class="delete-btn btn btn-danger" type="submit">Delete</button>
+                </form>
             </div>
     </div>
 </div>
 <div id="DeleteDashboardCard">
-    <button class="delete-btn btn btn-danger" onclick="location.href='/dashboardmain/delete/john_doe'">Delete Dashboard</button>
+    <form action="/dashboardmain/delete/john_doe" method="get">
+        <input type="submit" value="Delete Dashboard" />
+    </form>
+    <form action="/student/list" method="get">
+        <input type="submit" value="Add Student"/>
+    </form>
 </div>
 </body>
 </html>

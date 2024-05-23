@@ -44,4 +44,9 @@ public class DashboardController {
         dashboardService.addDashboard(dashboard);
         return "redirect:/dashboardmain";
     }
+    @GetMapping("dashboardmain/remove/{id}")
+    public String removeStudent(@PathVariable long id){
+        dashboardService.removeStudent(id);
+        return "redirect:/dashboardmain";
+    }
 }
