@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 
 public class DashboardRestcontroller {
     private final DashboardService dashboardService;
-    private final StudentRepository srepo;
 
     @GetMapping("/list/{educatorname}")
     public List<Dashboard> findDashboardByEducator(@PathVariable String educatorname){
