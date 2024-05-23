@@ -1,5 +1,6 @@
 package id.ac.ui.cs.sofeng.thinktank.controller;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
@@ -19,7 +20,8 @@ public class DashboardController {
     private StudentService studentService;
     @GetMapping("/dashboardmain")
     public String dashboardPage(Model model) {
-        List <Dashboard> dashboard = dashboardService.findDashboardByEducator("john_doe");
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List <Dashboard> dashboard = dashboardService.findDashboardByEducator(username);
         List <Student> students = new ArrayList<>();
         for (Dashboard dash : dashboard) {
             String val1 = dash.getStudentname();
@@ -30,8 +32,9 @@ public class DashboardController {
         return "dashboardmain";
     }
 
-    @GetMapping("dashboardmain/delete/{educatorname}")
-    public String deleteDashboard(@PathVariable String educatorname) {
+    @GetMapping("dashboardmain/delete")
+    public String deleteDashboard(Model model) {
+        String educatorname = SecurityContextHolder.getContext().getAuthentication().getName();
         dashboardService.deleteDashboard(educatorname);
         return "redirect:/dashboardmain";
     }

@@ -88,7 +88,8 @@
     </div>
 </div>
 <div id="DeleteDashboardCard">
-    <form action="/dashboardmain/delete/john_doe" method="get">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    <form action="/dashboardmain/delete" method="get">
         <input type="submit" value="Delete Dashboard" />
     </form>
     <form action="/student/list" method="get">
