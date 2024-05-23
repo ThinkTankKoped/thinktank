@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student List</title>
+</head>
+<body>
+<h1>Student List</h1>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>NPM</th>
+        <th>Grades</th>
+        <th>Attendance</th>
+        <th>Progress</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="student : ${students}">
+        <td th:text="${student.name}"></td>
+        <td th:text="${student.npm}"></td>
+        <td th:text="${student.grades}"></td>
+        <td th:text="${student.attendance}"></td>
+        <td th:text="${student.progress}"></td>
+        <td>
+            <form action="/dashboardmain/add" method="post">
+                <input type="hidden" name="studentname" th:value="${student.name}">
+                <input type="hidden" name="educatorname" value="john_doe">
+                <input type="submit" value="Add to Dashboard">
+            </form>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

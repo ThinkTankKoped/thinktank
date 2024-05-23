@@ -8,5 +8,5 @@ public interface DashboardRepository extends JpaRepository<Dashboard, Long>{
     List<Dashboard> findAllByEducatorsname(String educatorsname);
     Dashboard findByStudentname(String studentname);
     Dashboard findByEducatorsname(String educatorsname);
-    void deleteByEducatorsname(String educatorsname);
+    void deleteAllByEducatorsname(String educatorsname);
 }
