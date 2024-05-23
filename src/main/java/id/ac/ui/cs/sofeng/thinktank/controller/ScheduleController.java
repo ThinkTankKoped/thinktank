@@ -127,7 +127,7 @@ public class ScheduleController {
     }
 
     // Delete a schedule
-    @GetMapping("/delete")
+    @GetMapping("/delete/{id}")
     public String deleteSchedule(@PathVariable Long id) {
         String studentId = SecurityContextHolder.getContext().getAuthentication().getName();
         scheduleService.deleteSchedule(id);
