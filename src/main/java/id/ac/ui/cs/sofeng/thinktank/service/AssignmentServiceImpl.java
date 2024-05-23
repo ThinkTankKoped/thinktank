@@ -3,101 +3,101 @@ package id.ac.ui.cs.sofeng.thinktank.service;
 import id.ac.ui.cs.sofeng.thinktank.model.Assignment;
 import id.ac.ui.cs.sofeng.thinktank.repository.AssignmentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
-import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class AssignmentServiceImpl implements AssignmentService {
-
     private final AssignmentRepository assignmentRepository;
 
     @Override
-    public ResponseEntity<Assignment> findByAssignmentId(String assignmentId) {
-        Assignment assignment = assignmentRepository.findByAssignmentId(assignmentId);
-        if (assignment == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    public Assignment addAssignment(Assignment assignment, String npm) {
+        assignment.setAssignmentId(generateAssignmentId());
+        assignment.setProgress(0);
+        assignment.setNpm(npm);
+        assignment.setCompleted(false); // Ensure the default value for isCompleted is set to false
+        return assignmentRepository.save(assignment);
+    }
+
+    @Override
+    public Assignment updateAssignment(Assignment assignment) {
+        Assignment existingAssignment = assignmentRepository.findByAssignmentId(assignment.getAssignmentId());
+        if (existingAssignment == null) {
+            throw new IllegalArgumentException("Assignment not found");
         }
-        return ResponseEntity.ok(assignment);
+        existingAssignment.setTitle(assignment.getTitle());
+        existingAssignment.setDescription(assignment.getDescription());
+        existingAssignment.setDeadline(assignment.getDeadline());
+        existingAssignment.setTasks(assignment.getTasks());
+        existingAssignment.setProgress(calculateProgress(existingAssignment));
+        existingAssignment.setCompleted(assignment.isCompleted());
+        return assignmentRepository.save(existingAssignment);
     }
 
     @Override
-    public List<Assignment> findAllAssignments() {
-        return assignmentRepository.findAll();
-    }
-
-    @Override
-    public ResponseEntity<String> deleteByAssignmentId(String assignmentId) {
-        if (assignmentRepository.findByAssignmentId(assignmentId) == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Assignment not found");
-        }
-        assignmentRepository.deleteByAssignmentId(assignmentId);
-        return ResponseEntity.status(HttpStatus.OK).body("Assignment deleted successfully");
-    }
-
-    @Override
-    public ResponseEntity<Assignment> updateByAssignmentId(String assignmentId, Assignment data) {
+    public void deleteAssignment(String assignmentId) {
         Assignment existingAssignment = assignmentRepository.findByAssignmentId(assignmentId);
         if (existingAssignment == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            throw new IllegalArgumentException("Assignment not found");
         }
-
-        // Update assignment data
-        existingAssignment.setTitle(data.getTitle());
-        existingAssignment.setDescription(data.getDescription());
-        existingAssignment.setDeadline(data.getDeadline());
-        existingAssignment.setProgress(data.getProgress());
-        existingAssignment.setNpm(data.getNpm());
-
-        Assignment updatedAssignment = assignmentRepository.save(existingAssignment);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedAssignment);
+        assignmentRepository.deleteByAssignmentId(assignmentId);
     }
 
     @Override
-    public ResponseEntity<Assignment> createNewAssignment(Assignment data) {
-        // Generate unique assignmentId
-        String assignmentId = generateUniqueAssignmentId();
-        data.setAssignmentId(assignmentId);
-
-        Assignment savedAssignment = assignmentRepository.save(data);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedAssignment);
+    public Assignment getAssignmentById(String assignmentId) {
+        return assignmentRepository.findByAssignmentId(assignmentId);
     }
 
     @Override
-    public List<Assignment> findAllByNpm(String npm) {
+    public List<Assignment> getAllAssignmentsByNpm(String npm) {
         return assignmentRepository.findAllByNpm(npm);
     }
 
-    // Method to generate unique assignmentId
-    private String generateUniqueAssignmentId() {
-        Random random = new Random();
-        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String numbers = "0123456789";
-
-        StringBuilder assignmentId = new StringBuilder();
-        for (int i = 0; i < 3; i++) {
-            assignmentId.append(letters.charAt(random.nextInt(letters.length())));
+    @Override
+    public void markTaskAsComplete(String assignmentId, String task) {
+        Assignment assignment = assignmentRepository.findByAssignmentId(assignmentId);
+        if (assignment == null) {
+            throw new IllegalArgumentException("Assignment not found");
         }
-        for (int i = 0; i < 3; i++) {
-            assignmentId.append(numbers.charAt(random.nextInt(numbers.length())));
+        List<String> tasks = assignment.getTasks();
+        int taskIndex = tasks.indexOf(task);
+        if (taskIndex == -1) {
+            throw new IllegalArgumentException("Task not found in the assignment");
         }
+        tasks.set(taskIndex, "COMPLETE: " + task);
+        assignment.setProgress(calculateProgress(assignment));
+        assignmentRepository.save(assignment);
+    }
 
-        // Check if assignmentId already exists, generate a new one if needed
-        while (assignmentRepository.findByAssignmentId(assignmentId.toString()) != null) {
-            for (int i = 0; i < 3; i++) {
-                assignmentId.setCharAt(i, letters.charAt(random.nextInt(letters.length())));
-            }
-            for (int i = 3; i < 6; i++) {
-                assignmentId.setCharAt(i, numbers.charAt(random.nextInt(numbers.length())));
-            }
+    @Override
+    public void markAssignmentAsComplete(String assignmentId) {
+        Assignment assignment = assignmentRepository.findByAssignmentId(assignmentId);
+        if (assignment == null) {
+            throw new IllegalArgumentException("Assignment not found");
         }
+        assignment.setCompleted(true);
+        assignmentRepository.save(assignment);
+    }
 
-        return assignmentId.toString();
+    private String generateAssignmentId() {
+        String letters = UUID.randomUUID().toString().substring(0, 3).toUpperCase();
+        int numbers = ThreadLocalRandom.current().nextInt(100, 1000);
+        return letters + "-" + numbers;
+    }
+
+    private int calculateProgress(Assignment assignment) {
+        List<String> tasks = assignment.getTasks();
+        int totalTasks = tasks.size();
+        int completedTasks = (int) tasks.stream().filter(task -> task.startsWith("COMPLETE: ")).count();
+        if (totalTasks == 0) {
+            return 0;
+        }
+        return (completedTasks * 100) / totalTasks;
     }
 }

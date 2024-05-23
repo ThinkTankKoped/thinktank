@@ -3,12 +3,12 @@ package id.ac.ui.cs.sofeng.thinktank.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;
 
-
-@Getter
 @Setter
+@Getter
 @Entity
-@Table(name = "assignments")
+@Table(name = "tbl_assignment")
 public class Assignment {
 
     @Id
@@ -19,7 +19,7 @@ public class Assignment {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "NPM")
+    @Column(name = "npm")
     private String npm;
 
     @Column(name = "description")
@@ -32,6 +32,12 @@ public class Assignment {
     private int progress;
 
     @Column(name = "assignment_id", unique = true)
-    private String assignmentId; // Foreign key to reference the assignment
-}
+    private String assignmentId;
 
+    @ElementCollection
+    @Column(name = "tasks")
+    private List<String> tasks;
+
+    @Column(name = "is_completed", nullable = false)
+    private boolean isCompleted = false; // Default value
+}

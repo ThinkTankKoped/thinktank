@@ -1,16 +1,14 @@
 package id.ac.ui.cs.sofeng.thinktank.service;
 
 import id.ac.ui.cs.sofeng.thinktank.model.Assignment;
-import org.springframework.http.ResponseEntity;
-
 import java.util.List;
 
 public interface AssignmentService {
-
-    ResponseEntity<Assignment> findByAssignmentId(String assignmentId);
-    List<Assignment> findAllAssignments();
-    ResponseEntity<String> deleteByAssignmentId(String assignmentId);
-    ResponseEntity<Assignment> updateByAssignmentId(String assignmentId, Assignment data);
-    ResponseEntity<Assignment> createNewAssignment(Assignment data);
-    List<Assignment> findAllByNpm(String npm);
+    Assignment addAssignment(Assignment assignment, String npm);
+    Assignment updateAssignment(Assignment assignment);
+    void deleteAssignment(String assignmentId);
+    Assignment getAssignmentById(String assignmentId);
+    List<Assignment> getAllAssignmentsByNpm(String npm);
+    void markTaskAsComplete(String assignmentId, String task);
+    void markAssignmentAsComplete(String assignmentId);
 }

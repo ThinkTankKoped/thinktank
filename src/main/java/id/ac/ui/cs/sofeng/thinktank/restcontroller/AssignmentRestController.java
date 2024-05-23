@@ -3,47 +3,50 @@ package id.ac.ui.cs.sofeng.thinktank.restcontroller;
 import id.ac.ui.cs.sofeng.thinktank.model.Assignment;
 import id.ac.ui.cs.sofeng.thinktank.service.AssignmentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/assignments")
+@RequestMapping("/api/assignments")
 @RequiredArgsConstructor
 public class AssignmentRestController {
 
     private final AssignmentService assignmentService;
 
-    @GetMapping("/list")
-    public List<Assignment> findAllAssignments() {
-        return assignmentService.findAllAssignments();
+    @PostMapping("/add")
+    public Assignment addAssignment(@RequestBody Assignment assignment, @RequestParam String npm) {
+        return assignmentService.addAssignment(assignment, npm);
     }
 
-    @GetMapping("/search/{assignmentId}")
-    public ResponseEntity<Assignment> findByAssignmentId(@PathVariable String assignmentId) {
-        return assignmentService.findByAssignmentId(assignmentId);
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<Assignment> createNewAssignment(@RequestBody Assignment data) {
-        return assignmentService.createNewAssignment(data);
+    @PutMapping("/update")
+    public Assignment updateAssignment(@RequestBody Assignment assignment) {
+        return assignmentService.updateAssignment(assignment);
     }
 
     @DeleteMapping("/delete/{assignmentId}")
-    public ResponseEntity<String> deleteAssignmentByAssignmentId(@PathVariable String assignmentId) {
-        return assignmentService.deleteByAssignmentId(assignmentId);
+    public void deleteAssignment(@PathVariable String assignmentId) {
+        assignmentService.deleteAssignment(assignmentId);
     }
 
-    @PutMapping("/update/{assignmentId}")
-    public ResponseEntity<Assignment> updateAssignmentByAssignmentId(@PathVariable String assignmentId, @RequestBody Assignment data) {
-        return assignmentService.updateByAssignmentId(assignmentId, data);
+    @GetMapping("/get/{assignmentId}")
+    public Assignment getAssignmentById(@PathVariable String assignmentId) {
+        return assignmentService.getAssignmentById(assignmentId);
     }
 
-    @GetMapping("/search/npm/{npm}")
-    public List<Assignment> findAllByNpm(@PathVariable String npm) {
-        return assignmentService.findAllByNpm(npm);
+    @GetMapping("/all")
+    public List<Assignment> getAllAssignments(@RequestParam String npm) {
+        return assignmentService.getAllAssignmentsByNpm(npm);
+    }
+
+    @PutMapping("/complete-task/{assignmentId}")
+    public void markTaskAsComplete(@PathVariable String assignmentId, @RequestParam String task) {
+        assignmentService.markTaskAsComplete(assignmentId, task);
+    }
+
+    @GetMapping("/all/{npm}")
+    public List<Assignment> getAllAssignmentsByNpm(@PathVariable String npm) {
+        return assignmentService.getAllAssignmentsByNpm(npm);
     }
 }
