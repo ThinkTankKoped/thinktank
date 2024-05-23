@@ -1,8 +1,12 @@
 package id.ac.ui.cs.sofeng.thinktank.controller;
 
 import id.ac.ui.cs.sofeng.thinktank.model.Assignment;
+import id.ac.ui.cs.sofeng.thinktank.model.Student;
+import id.ac.ui.cs.sofeng.thinktank.repository.StudentRepository;
 import id.ac.ui.cs.sofeng.thinktank.service.AssignmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +19,14 @@ import java.util.List;
 public class AssignmentController {
 
     private final AssignmentService assignmentService;
+    private final StudentRepository studentRepository;
 
     @GetMapping("/main")
     public String mainPage(Model model) {
-        String npm = "1234567890"; // Hardcoded for testing
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student studentData = studentRepository.findByUsername(auth.getName());
+        String npm = studentData.getNpm();
+
         List<Assignment> assignments = assignmentService.getAllAssignmentsByNpm(npm);
         model.addAttribute("assignments", assignments);
         return "Assignment/main";
@@ -32,7 +40,9 @@ public class AssignmentController {
 
     @PostMapping("/create")
     public String createAssignment(@ModelAttribute Assignment assignment) {
-        String npm = "1234567890"; // Hardcoded for testing
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student studentData = studentRepository.findByUsername(auth.getName());
+        String npm = studentData.getNpm();
         assignmentService.addAssignment(assignment, npm);
         return "redirect:/assignments/main";
     }
