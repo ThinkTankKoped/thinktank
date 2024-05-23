@@ -1,10 +1,11 @@
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head> <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FORM</title></head>
 <body>
 <h1>Student Form</h1>
 <form action="/student/studentform" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     <label for="name">Name:</label><br>
     <input type="text" id="name" name="username"><br>
     <label for="npm">NPM:</label><br>
