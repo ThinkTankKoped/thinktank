@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Task</title>
+</head>
+<body>
+<h1>Edit Task</h1>
+<form th:action="@{'/assignments/task/update/' + ${task.taskId}}" method="post">
+    <input type="text" name="title" th:value="${task.title}" placeholder="Title" required />
+    <input type="text" name="description" th:value="${task.description}" placeholder="Description" />
+    <input type="checkbox" name="status" th:checked="${task.status}" /> Complete
+    <button type="submit">Update</button>
+</form>
+<a th:href="@{'/assignments/view/' + ${task.assignment.assignmentId}}">Back to Assignment</a>
+</body>
+</html>

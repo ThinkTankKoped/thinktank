@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Assignment</title>
+</head>
+<body>
+<h1>Edit Assignment</h1>
+<form th:action="@{'/assignments/update/' + ${assignment.assignmentId}}" method="post">
+    <input type="text" name="title" th:value="${assignment.title}" placeholder="Title" required />
+    <input type="text" name="description" th:value="${assignment.description}" placeholder="Description" required />
+    <input type="text" name="deadline" th:value="${assignment.deadline}" placeholder="Deadline" />
+    <h2>Edit Task List</h2>
+    <div id="tasks">
+        <div th:each="task, iterStat : ${tasks}">
+            <input type="text" th:name="'tasks[' + ${iterStat.index} + '].title'" th:value="${task.title}" placeholder="Task Title" required />
+            <input type="text" th:name="'tasks[' + ${iterStat.index} + '].description'" th:value="${task.description}" placeholder="Task Description" />
+            <a th:href="@{'/assignments/task/delete/' + ${task.taskId}}">Delete Task</a>
+        </div>
+    </div>
+    <button type="button" onclick="addTask()">Add Task</button>
+    <button type="submit">Update</button>
+</form>
+<a href="/assignments/list">Back to Assignment List</a>
+
+<script>
+    function addTask() {
+        const tasksDiv = document.getElementById('tasks');
+        const index = tasksDiv.children.length;
+        const taskDiv = document.createElement('div');
+        taskDiv.innerHTML = `
+                <input type="text" name="tasks[${index}].title" placeholder="Task Title" required />
+                <input type="text" name="tasks[${index}].description" placeholder="Task Description" />
+            `;
+        tasksDiv.appendChild(taskDiv);
+    }
+</script>
+</body>
+</html>

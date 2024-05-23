@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Assignment View</title>
+</head>
+<body>
+<h1 th:text="${assignment.title}"></h1>
+<p th:text="'Description: ' + ${assignment.description}"></p>
+<p th:text="'Progress: ' + ${assignment.progress + '%'}"></p>
+<h2>Tasks</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.title}"></td>
+        <td th:text="${task.description}"></td>
+        <td th:text="${task.status ? 'Complete' : 'Incomplete'}"></td>
+        <td>
+            <a th:href="@{'/assignments/task/edit/' + ${task.taskId}}">Edit</a>
+            <a th:href="@{'/assignments/task/delete/' + ${task.taskId}}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<form th:action="@{'/assignments/task/create/' + ${assignment.assignmentId}}" method="post">
+    <h2>Create Task</h2>
+    <input type="text" name="title" placeholder="Title" required />
+    <input type="text" name="description" placeholder="Description" />
+    <button type="submit">Create</button>
+</form>
+<a href="/assignments/list">Back to Assignment List</a>
+</body>
+</html>

@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/assignments")
+@RequestMapping("/api/assignments")
 @RequiredArgsConstructor
 public class AssignmentRestController {
 
