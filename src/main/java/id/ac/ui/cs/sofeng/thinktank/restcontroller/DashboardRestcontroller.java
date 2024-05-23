@@ -23,14 +23,4 @@ public class DashboardRestcontroller {
     public List<Dashboard> findDashboardByEducator(@PathVariable String educatorname){
         return dashboardService.findDashboardByEducator(educatorname);
     }
-    @DeleteMapping("/remove/{id}")
-    public void removeStudent(@PathVariable long id){
-        dashboardService.removeStudent(id);
-    }
-
-
-    @GetMapping("/buatadam")
-    public List<Student> findAllStudent(){
-        return srepo.findAll();
-    }
 }
