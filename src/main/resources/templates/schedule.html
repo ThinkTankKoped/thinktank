@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Table</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Schedule Table</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Time</th>
+            <th>Sunday</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+        </tr>
+        </thead>
+        <tbody id="scheduleBody">
+        <!-- Schedule data will be populated here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Bootstrap JS (optional, only if you need Bootstrap components) -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Your custom JavaScript code to fetch and render data -->
+<script th:inline="javascript">
+    // Fetch schedule data from backend API
+    fetch('/schedules')
+        .then(response => response.json())
+        .then(data => {
+            // Function to populate schedule data in the table
+            function populateSchedule(schedule) {
+                // Example: Create a table row for each schedule item
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                        <td>${schedule.startTime}</td>
+                        <td>${schedule.dayOfWeek === 'SUNDAY' ? schedule.courseName : ''}</td>
+                        <td>${schedule.dayOfWeek === 'MONDAY' ? schedule.courseName : ''}</td>
+                        <td>${schedule.dayOfWeek === 'TUESDAY' ? schedule.courseName : ''}</td>
+                        <td>${schedule.dayOfWeek === 'WEDNESDAY' ? schedule.courseName : ''}</td>
+                        <td>${schedule.dayOfWeek === 'THURSDAY' ? schedule.courseName : ''}</td>
+                        <td>${schedule.dayOfWeek === 'FRIDAY' ? schedule.courseName : ''}</td>
+                        <td>${schedule.dayOfWeek === 'SATURDAY' ? schedule.courseName : ''}</td>
+                    `;
+                document.getElementById('scheduleBody').appendChild(row);
+            }
+
+            // Iterate over each schedule item and populate the table
+            data.forEach(schedule => populateSchedule(schedule));
+        })
+        .catch(error => console.error('Error fetching schedule data:', error));
+</script>
+</body>
+</html>

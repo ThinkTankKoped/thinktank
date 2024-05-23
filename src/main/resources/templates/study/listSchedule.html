@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule List</title>
+</head>
+<body>
+<h2>Schedule List</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Student ID</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Course Name</th>
+        <th>Day of Week</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="schedule : ${schedules}">
+        <td th:text="${schedule.id}"></td>
+        <td th:text="${schedule.studentId}"></td>
+        <td th:text="${schedule.startTime}"></td>
+        <td th:text="${schedule.endTime}"></td>
+        <td th:text="${schedule.courseName}"></td>
+        <td th:text="${schedule.dayOfWeek}"></td>
+        <td>
+            <a th:href="@{/schedules/edit/{id}(id=${schedule.id}, studentId=${schedule.studentId})}">Edit</a> |
+            <a th:href="@{/schedules/delete/{id}(id=${schedule.id}, studentId=${schedule.studentId})}">Delete</a>
+        </td>
+    </tr>
+</table>
+
+<form id="myForm" th:action="@{'/schedules/new'}" method="get">
+    <input type="hidden" name="studentId" th:value="${id}" />
+    <button type="submit">Add</button>
+</form>
+
+<form action="#" th:action="@{'/schedules/student/' + ${id}}" method="get">
+    <button type="submit">Back</button>
+</form>
+
+</body>
+</html>

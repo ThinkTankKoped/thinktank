@@ -18,10 +18,10 @@ public class ScheduleRestController {
 
     private final ScheduleService scheduleService;
 
-    @GetMapping
-    public List<Schedule> getAllSchedules() {
-        return scheduleService.findAll();
-    }
+//    @GetMapping
+//    public List<Schedule> getAllSchedules() {
+//        return scheduleService.findAll();
+//    }
 
     @PostMapping
     public ResponseEntity<?> createSchedule(@RequestBody Schedule schedule) {
