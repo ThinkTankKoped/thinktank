@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -21,10 +22,10 @@ public class Schedule {
     private String studentId;
 
     @Column(name = "startTime")
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
     @Column(name = "endTime")
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
     @Column(name = "courseId")
     private String courseId;

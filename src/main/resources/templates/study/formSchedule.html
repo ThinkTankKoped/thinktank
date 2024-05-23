@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule Form</title>
+</head>
+<body>
+<h2>Schedule Form</h2>
+<form th:object="${schedule}" th:action="@{/schedules/save(studentId=${studentId})}" method="post">
+    <input type="hidden" th:field="*{id}" />
+
+    <div>
+        <label for="startTime">Start Time:</label>
+        <select th:field="*{startTime}">
+            <option th:each="time : ${timeSlots}" th:value="${time}" th:text="${time}"></option>
+        </select>
+    </div>
+    <div>
+        <label for="endTime">End Time:</label>
+        <select th:field="*{endTime}">
+            <option th:each="time : ${timeSlots}" th:value="${time}" th:text="${time}"></option>
+        </select>
+    </div>
+    <!--    <div>-->
+    <!--        <label for="courseId">Course ID:</label>-->
+    <!--        <input type="text" th:field="*{courseId}" />-->
+    <!--    </div>-->
+    <div>
+        <label for="courseName">Course Name:</label>
+        <input type="text" th:field="*{courseName}" />
+    </div>
+    <div>
+        <label for="dayOfWeek">Day of Week:</label>
+        <select th:field="*{dayOfWeek}">
+            <option value="SUNDAY">Sunday</option>
+            <option value="MONDAY">Monday</option>
+            <option value="TUESDAY">Tuesday</option>
+            <option value="WEDNESDAY">Wednesday</option>
+            <option value="THURSDAY">Tuesday</option>
+            <option value="FRIDAY">Friday</option>
+            <option value="SATURDAY">Saturday</option>
+        </select>
+    </div>
+    <div>
+        <button type="submit">Save</button>
+    </div>
+</form>
+<a th:href="@{'/schedules/student/' + ${schedule.getStudentId()} + '/detail'}">Cancel</a>
+</body>
+</html>
