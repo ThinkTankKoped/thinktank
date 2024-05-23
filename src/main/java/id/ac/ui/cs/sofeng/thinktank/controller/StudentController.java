@@ -23,7 +23,7 @@ public class StudentController {
     @PostMapping("/studentform")
     public String formSubmit(@ModelAttribute Student student) {
         Student student1 = new Student();
-        student1.setName(student.getName());
+        student1.setUsername(student.getUsername());
         student1.setNpm(student.getNpm());
         student1.setGrades(student.getGrades());
         student1.setAttendance(student.getAttendance());

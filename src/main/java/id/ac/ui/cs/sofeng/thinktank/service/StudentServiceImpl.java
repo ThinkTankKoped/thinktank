@@ -13,25 +13,25 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     public void deleteStudent(String name) {
-        if (studentRepository.findByName(name) == null) {
+        if (studentRepository.findByUsername(name) == null) {
             return;
         }
         else {
-            studentRepository.deleteByName(name);
+            studentRepository.deleteByUsername(name);
         }
     }
 
     @Override
     public Student findStudent(String name) {
-        return studentRepository.findByName(name);
+        return studentRepository.findByUsername(name);
     }
 
     @Override
     public Student createNewStudent(Student data) {
-        if (data.getName() == null || data.getNpm() == null || data.getGrades() == 0) {
+        if (data.getUsername() == null || data.getNpm() == null || data.getGrades() == 0) {
             return null;
         }
-        else if (studentRepository.findByName(data.getName()) != null) {
+        else if (studentRepository.findByUsername(data.getUsername()) != null) {
             return null;
         }
         return studentRepository.save(data);
