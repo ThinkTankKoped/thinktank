@@ -16,14 +16,14 @@
         <th>Action</th>
     </tr>
     <tr th:each="student : ${students}">
-        <td th:text="${student.name}"></td>
+        <td th:text="${student.username}"></td>
         <td th:text="${student.npm}"></td>
         <td th:text="${student.grades}"></td>
         <td th:text="${student.attendance}"></td>
         <td th:text="${student.progress}"></td>
         <td>
             <form action="/dashboardmain/add" method="post">
-                <input type="hidden" name="studentname" th:value="${student.name}">
+                <input type="hidden" name="studentname" th:value="${student.username}">
                 <input type="hidden" name="educatorname" value="john_doe">
                 <input type="submit" value="Add to Dashboard">
             </form>

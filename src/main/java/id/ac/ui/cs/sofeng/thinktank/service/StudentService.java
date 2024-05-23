@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface StudentService {
-    void deleteStudent(String name);
-    Student findStudent(String name);
+    void deleteStudent(String username);
+    Student findStudent(String username);
     Student createNewStudent(Student data);
     List<Student> getAllStudent();
 }

@@ -14,8 +14,8 @@ public class Student {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private long id;
 
-        @Column(name = "name")
-        private String name;
+        @Column(name = "username")
+        private String username;
 
         @Column(name = "NPM")
         private String npm;
