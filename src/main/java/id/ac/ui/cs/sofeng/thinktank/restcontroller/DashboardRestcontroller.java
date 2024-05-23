@@ -1,6 +1,8 @@
 package id.ac.ui.cs.sofeng.thinktank.restcontroller;
 import java.util.List;
 
+import id.ac.ui.cs.sofeng.thinktank.model.Student;
+import id.ac.ui.cs.sofeng.thinktank.repository.StudentRepository;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import id.ac.ui.cs.sofeng.thinktank.model.Dashboard;
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 public class DashboardRestcontroller {
     private final DashboardService dashboardService;
+    private final StudentRepository srepo;
 
     @GetMapping("/list/{educatorname}")
     public List<Dashboard> findDashboardByEducator(@PathVariable String educatorname){
@@ -23,5 +26,11 @@ public class DashboardRestcontroller {
     @DeleteMapping("/remove/{id}")
     public void removeStudent(@PathVariable long id){
         dashboardService.removeStudent(id);
+    }
+
+
+    @GetMapping("/buatadam")
+    public List<Student> findAllStudent(){
+        return srepo.findAll();
     }
 }
