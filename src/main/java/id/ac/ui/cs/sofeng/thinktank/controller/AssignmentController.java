@@ -39,18 +39,32 @@ public class AssignmentController {
         return "redirect:/assignments/list";
     }
 
-    @GetMapping("/edit/{assignmentId}")
-    public String editAssignment(@PathVariable String assignmentId, Model model) {
+    @GetMapping("/view/{assignmentId}")
+    public String viewAssignment(@PathVariable String assignmentId, Model model) {
         Assignment assignment = assignmentService.findByAssignmentId(assignmentId).getBody();
         List<Task> tasks = taskService.findAllByAssignmentId(assignmentId);
         model.addAttribute("assignment", assignment);
         model.addAttribute("tasks", tasks);
+        return "Assignment/assignment_view";
+    }
+
+    @GetMapping("/edit/{assignmentId}")
+    public String editAssignment(@PathVariable String assignmentId, Model model) {
+        Assignment assignment = assignmentService.findByAssignmentId(assignmentId).getBody();
+        model.addAttribute("assignment", assignment);
         return "Assignment/assignment_edit";
     }
 
     @PostMapping("/update/{assignmentId}")
     public String updateAssignment(@PathVariable String assignmentId, @ModelAttribute Assignment assignment) {
-        assignmentService.updateByAssignmentId(assignmentId, assignment);
+        Assignment existingAssignment = assignmentService.findByAssignmentId(assignmentId).getBody();
+        if (existingAssignment != null) {
+            existingAssignment.setTitle(assignment.getTitle());
+            existingAssignment.setDescription(assignment.getDescription());
+            existingAssignment.setDeadline(assignment.getDeadline());
+            existingAssignment.setProgress(assignment.getProgress());
+            assignmentService.updateByAssignmentId(assignmentId, existingAssignment);
+        }
         return "redirect:/assignments/list";
     }
 
@@ -84,28 +98,6 @@ public class AssignmentController {
     @PostMapping("/task/update/{taskId}")
     public String updateTask(@PathVariable String taskId, @ModelAttribute Task task) {
         taskService.updateByTaskId(taskId, task);
-        return "redirect:/assignments/list";
-    }
-
-    @PostMapping("/task/complete/{taskId}")
-    public String completeTask(@PathVariable String taskId) {
-        Task task = taskService.findByTaskId(taskId).getBody();
-        if (task != null) {
-            task.setStatus(true);
-            taskService.updateByTaskId(taskId, task);
-            return "redirect:/assignments/list";
-        }
-        return "redirect:/assignments/list";
-    }
-
-    @PostMapping("/complete/{assignmentId}")
-    public String completeAssignment(@PathVariable String assignmentId) {
-        Assignment assignment = assignmentService.findByAssignmentId(assignmentId).getBody();
-        if (assignment != null) {
-            assignment.setProgress(100);
-            assignmentService.updateByAssignmentId(assignmentId, assignment);
-            return "redirect:/assignments/list";
-        }
         return "redirect:/assignments/list";
     }
 }

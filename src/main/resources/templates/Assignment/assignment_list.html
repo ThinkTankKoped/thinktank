@@ -11,6 +11,7 @@
         <th>Title</th>
         <th>Description</th>
         <th>Progress</th>
+        <th>Tasks</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -20,38 +21,14 @@
         <td th:text="${assignment.description}"></td>
         <td th:text="${assignment.progress + '%'}"></td>
         <td>
+            <ul>
+                <li th:each="task : ${assignment.tasks}" th:text="${task.title}"></li>
+            </ul>
+        </td>
+        <td>
             <a th:href="@{'/assignments/edit/' + ${assignment.assignmentId}}">Edit</a>
             <a th:href="@{'/assignments/delete/' + ${assignment.assignmentId}}">Delete</a>
-        </td>
-    </tr>
-    <tr th:each="assignment : ${assignments}">
-        <td colspan="4">
-            <h3>Tasks for <span th:text="${assignment.title}"></span></h3>
-            <table>
-                <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="task : ${assignment.tasks}">
-                    <td th:text="${task.title}"></td>
-                    <td th:text="${task.description}"></td>
-                    <td th:text="${task.status ? 'Complete' : 'Incomplete'}"></td>
-                    <td>
-                        <form th:action="@{'/assignments/task/complete/' + ${task.taskId}}" method="post" style="display:inline;">
-                            <button type="submit" th:disabled="${task.status}">Mark as Complete</button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <form th:action="@{'/assignments/complete/' + ${assignment.assignmentId}}" method="post">
-                <button type="submit" th:if="${assignment.progress < 100}" disabled>Complete</button>
-            </form>
+            <a th:href="@{'/assignments/view/' + ${assignment.assignmentId}}">View</a>
         </td>
     </tr>
     </tbody>
