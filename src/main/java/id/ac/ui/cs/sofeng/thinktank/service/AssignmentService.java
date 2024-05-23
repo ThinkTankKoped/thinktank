@@ -10,4 +10,5 @@ public interface AssignmentService {
     Assignment getAssignmentById(String assignmentId);
     List<Assignment> getAllAssignmentsByNpm(String npm);
     void markTaskAsComplete(String assignmentId, String task);
+    void markAssignmentAsComplete(String assignmentId);
 }

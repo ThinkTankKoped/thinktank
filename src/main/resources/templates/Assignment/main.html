@@ -8,9 +8,10 @@
 <ul>
     <li th:each="assignment : ${assignments}">
         <span th:text="${assignment.title}"></span> -
-        <span th:text="${assignment.progress} + '%'"></span>
+        <span th:text="${assignment.progress} + '%'"></span> -
+        <span th:text="${assignment.isCompleted ? 'Completed' : 'In Progress'}"></span>
         <button th:attr="onclick=|location.href='/assignments/delete/' + '${assignment.assignmentId}'|">Delete</button>
-        <button th:attr="onclick=|location.href='/assignments/edit/' + '${assignment.assignmentId}'|">Edit</button>
+        <button th:attr="onclick=|location.href='/assignments/edit/' + '${assignment.assignmentId}'|" th:disabled="${assignment.isCompleted}">Edit</button>
         <button th:attr="onclick=|location.href='/assignments/view/' + '${assignment.assignmentId}'|">View</button>
     </li>
 </ul>

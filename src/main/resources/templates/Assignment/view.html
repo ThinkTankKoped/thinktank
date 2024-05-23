@@ -15,6 +15,7 @@
         <button th:if="!${task.startsWith('COMPLETE')}" th:attr="onclick=|location.href='/assignments/complete-task/' + '${assignment.assignmentId}' + '?task=' + '${task}'|">Mark as Complete</button>
     </li>
 </ul>
+<button th:if="${assignment.progress == 100 && !assignment.isCompleted}" th:attr="onclick=|location.href='/assignments/complete/' + '${assignment.assignmentId}'|">Complete Assignment</button>
 <button onclick="location.href='/assignments/main'">Back to Main</button>
 </body>
 </html>

@@ -37,4 +37,7 @@ public class Assignment {
     @ElementCollection
     @Column(name = "tasks")
     private List<String> tasks;
+
+    @Column(name = "is_completed", nullable = false)
+    private boolean isCompleted = false; // Default value
 }

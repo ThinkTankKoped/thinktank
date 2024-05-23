@@ -21,6 +21,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignment.setAssignmentId(generateAssignmentId());
         assignment.setProgress(0);
         assignment.setNpm(npm);
+        assignment.setCompleted(false); // Ensure the default value for isCompleted is set to false
         return assignmentRepository.save(assignment);
     }
 
@@ -35,6 +36,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         existingAssignment.setDeadline(assignment.getDeadline());
         existingAssignment.setTasks(assignment.getTasks());
         existingAssignment.setProgress(calculateProgress(existingAssignment));
+        existingAssignment.setCompleted(assignment.isCompleted());
         return assignmentRepository.save(existingAssignment);
     }
 
@@ -70,6 +72,16 @@ public class AssignmentServiceImpl implements AssignmentService {
         }
         tasks.set(taskIndex, "COMPLETE: " + task);
         assignment.setProgress(calculateProgress(assignment));
+        assignmentRepository.save(assignment);
+    }
+
+    @Override
+    public void markAssignmentAsComplete(String assignmentId) {
+        Assignment assignment = assignmentRepository.findByAssignmentId(assignmentId);
+        if (assignment == null) {
+            throw new IllegalArgumentException("Assignment not found");
+        }
+        assignment.setCompleted(true);
         assignmentRepository.save(assignment);
     }
 

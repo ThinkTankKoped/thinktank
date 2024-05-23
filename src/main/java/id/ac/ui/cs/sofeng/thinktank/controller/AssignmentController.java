@@ -69,4 +69,10 @@ public class AssignmentController {
         assignmentService.markTaskAsComplete(assignmentId, task);
         return "redirect:/assignments/view/" + assignmentId;
     }
+
+    @GetMapping("/complete/{assignmentId}")
+    public String completeAssignment(@PathVariable String assignmentId) {
+        assignmentService.markAssignmentAsComplete(assignmentId);
+        return "redirect:/assignments/main";
+    }
 }
