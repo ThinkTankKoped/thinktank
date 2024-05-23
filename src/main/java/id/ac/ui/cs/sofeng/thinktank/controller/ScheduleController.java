@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -24,15 +25,16 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
-    @GetMapping("/student/{id}/detail")
-    public String showDetailSchedules(@PathVariable String id, Model model) {
-        model.addAttribute("schedules", scheduleService.getScheduleByStudentId(id));
-        model.addAttribute("id", id);
+    @GetMapping("/student/detail")
+    public String showDetailSchedules(Model model) {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        model.addAttribute("schedules", scheduleService.getScheduleByStudentId(userLogin));
+        model.addAttribute("id", userLogin);
         return "study/listSchedule";
     }
 
-    @GetMapping("/student/{id}")
-    public String showSchedules(@PathVariable String id, Model model) {
+    @GetMapping("/student")
+    public String showSchedules(Model model) {
         String[] daysOfWeek = {
                 DayOfWeek.SUNDAY.name(),
                 DayOfWeek.MONDAY.name(),
@@ -73,7 +75,7 @@ public class ScheduleController {
         for (int i = 0; i < hoursOfDay.length; i++) {
             hoursOfDayAsString[i] = hoursOfDay[i].toString();
         }
-
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
         ScheduleCell[][] studySchedule = scheduleService.findAll(daysOfWeek, hoursOfDay, id);
 
         model.addAttribute("daysOfWeek", Arrays.asList(daysOfWeek));
@@ -84,18 +86,20 @@ public class ScheduleController {
     }
 
     @GetMapping("/new")
-    public String showStudyScheduleForm(@RequestParam String studentId,  Model model) {
+    public String showStudyScheduleForm( Model model) {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
         model.addAttribute("schedule", new Schedule());
-        model.addAttribute("studentId", studentId);
+        model.addAttribute("studentId", userLogin);
         model.addAttribute("timeSlots", scheduleService.getTimeSlot());
         return "study/formSchedule";
     }
 
     @PostMapping("/save")
-    public String createSchedule(@RequestParam String studentId, @ModelAttribute("schedule") Schedule schedule) {
-        schedule.setStudentId(studentId);
+    public String createSchedule(@ModelAttribute("schedule") Schedule schedule) {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        schedule.setStudentId(userLogin);
         scheduleService.createSchedule(schedule);
-        return "redirect:/schedules/student/" + schedule.getStudentId() + "/detail";
+        return "redirect:/schedules/student";
     }
 
     @GetMapping("/edit/{id}")
@@ -123,10 +127,10 @@ public class ScheduleController {
     }
 
     // Delete a schedule
-    @GetMapping("/delete/{id}")
-    public String deleteSchedule(@PathVariable Long id,
-                                 @RequestParam("studentId") String studentId) {
+    @GetMapping("/delete")
+    public String deleteSchedule(@PathVariable Long id) {
+        String studentId = SecurityContextHolder.getContext().getAuthentication().getName();
         scheduleService.deleteSchedule(id);
-        return "redirect:/schedules/student/" + studentId + "/detail";
+        return "redirect:/schedules/student/detail";
     }
 }
