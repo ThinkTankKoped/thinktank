@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,6 +33,8 @@ public class Assignment {
     private int progress;
 
     @Column(name = "assignment_id", unique = true)
-    private String assignmentId; // Foreign key to reference the assignment
-}
+    private String assignmentId; // Unique identifier for the assignment
 
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks; // List of tasks associated with the assignment
+}

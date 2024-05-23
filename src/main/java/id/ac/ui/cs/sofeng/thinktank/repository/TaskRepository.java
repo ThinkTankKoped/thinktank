@@ -10,10 +10,9 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {
     Task findByTaskId(String taskId);
-    String deleteByTaskId(String taskId);
-    List<Task> findAllByAssignmentId(String assignmentId);
+    void deleteByTaskId(String taskId);
+    List<Task> findAllByAssignmentAssignmentId(String assignmentId);
 
-    @Query("SELECT MAX(CAST(SUBSTRING(t.taskId, 4) AS int)) FROM Task t WHERE t.taskId LIKE CONCAT(:assignmentIdPrefix, '%')")
+    @Query("SELECT MAX(CAST(SUBSTRING(t.taskId, LENGTH(:assignmentIdPrefix) + 1) AS int)) FROM Task t WHERE t.taskId LIKE CONCAT(:assignmentIdPrefix, '%')")
     Integer findMaxTaskNumberByAssignmentIdPrefix(String assignmentIdPrefix);
-
 }

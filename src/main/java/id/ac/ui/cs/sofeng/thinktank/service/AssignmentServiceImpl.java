@@ -61,12 +61,12 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public ResponseEntity<Assignment> createNewAssignment(Assignment data) {
-        // Generate unique assignmentId
-        String assignmentId = generateUniqueAssignmentId();
-        data.setAssignmentId(assignmentId);
+        String uniqueAssignmentId = generateUniqueAssignmentId();
+        data.setAssignmentId(uniqueAssignmentId);
+        data.setProgress(0);
 
-        Assignment savedAssignment = assignmentRepository.save(data);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedAssignment);
+        Assignment newAssignment = assignmentRepository.save(data);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newAssignment);
     }
 
     @Override
@@ -74,30 +74,14 @@ public class AssignmentServiceImpl implements AssignmentService {
         return assignmentRepository.findAllByNpm(npm);
     }
 
-    // Method to generate unique assignmentId
     private String generateUniqueAssignmentId() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder result = new StringBuilder();
         Random random = new Random();
-        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String numbers = "0123456789";
-
-        StringBuilder assignmentId = new StringBuilder();
-        for (int i = 0; i < 3; i++) {
-            assignmentId.append(letters.charAt(random.nextInt(letters.length())));
+        while (result.length() < 10) {
+            int index = random.nextInt(characters.length());
+            result.append(characters.charAt(index));
         }
-        for (int i = 0; i < 3; i++) {
-            assignmentId.append(numbers.charAt(random.nextInt(numbers.length())));
-        }
-
-        // Check if assignmentId already exists, generate a new one if needed
-        while (assignmentRepository.findByAssignmentId(assignmentId.toString()) != null) {
-            for (int i = 0; i < 3; i++) {
-                assignmentId.setCharAt(i, letters.charAt(random.nextInt(letters.length())));
-            }
-            for (int i = 3; i < 6; i++) {
-                assignmentId.setCharAt(i, numbers.charAt(random.nextInt(numbers.length())));
-            }
-        }
-
-        return assignmentId.toString();
+        return result.toString();
     }
 }

@@ -24,12 +24,10 @@ public class Task {
     @Column(name = "status")
     private boolean status; // true for complete, false for incomplete
 
-    @Column(name = "taskId", unique = true)
-    private String taskId;
+    @Column(name = "task_id", unique = true)
+    private String taskId; // Unique identifier for the task
 
-    @Column(name = "assignmentId")
-    private String assignmentId; // Foreign key to reference the assignment
-
-    // You can add constructors, getters, setters, and other methods as needed
+    @ManyToOne
+    @JoinColumn(name = "assignment_id")
+    private Assignment assignment; // Reference to the assignment
 }
-

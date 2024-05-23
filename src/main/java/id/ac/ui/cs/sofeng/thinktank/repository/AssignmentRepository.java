@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
     Assignment findByAssignmentId(String assignmentId);
-    String deleteByAssignmentId(String assignmentId);
+    void deleteByAssignmentId(String assignmentId);
     List<Assignment> findAllByNpm(String npm);
 }

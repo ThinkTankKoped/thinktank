@@ -1,6 +1,8 @@
 package id.ac.ui.cs.sofeng.thinktank.service;
 
+import id.ac.ui.cs.sofeng.thinktank.model.Assignment;
 import id.ac.ui.cs.sofeng.thinktank.model.Task;
+import id.ac.ui.cs.sofeng.thinktank.repository.AssignmentRepository;
 import id.ac.ui.cs.sofeng.thinktank.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final AssignmentRepository assignmentRepository;
 
     @Override
     public ResponseEntity<Task> findByTaskId(String taskId) {
@@ -33,10 +36,16 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public ResponseEntity<String> deleteByTaskId(String taskId) {
-        if (taskRepository.findByTaskId(taskId) == null) {
+        Task task = taskRepository.findByTaskId(taskId);
+        if (task == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not found");
         }
+        Assignment assignment = task.getAssignment();
         taskRepository.deleteByTaskId(taskId);
+
+        // Update assignment progress
+        updateAssignmentProgress(assignment);
+
         return ResponseEntity.status(HttpStatus.OK).body("Task deleted successfully");
     }
 
@@ -47,48 +56,54 @@ public class TaskServiceImpl implements TaskService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        // Update task data
         existingTask.setTitle(data.getTitle());
         existingTask.setDescription(data.getDescription());
         existingTask.setStatus(data.isStatus());
 
         Task updatedTask = taskRepository.save(existingTask);
+
+        // Update assignment progress
+        Assignment assignment = existingTask.getAssignment();
+        updateAssignmentProgress(assignment);
+
         return ResponseEntity.status(HttpStatus.OK).body(updatedTask);
     }
 
     @Override
     public ResponseEntity<Task> createNewTask(Task data) {
-        // Generate unique task ID based on assignment ID
-        String assignmentId = data.getAssignmentId();
-        String taskId = generateUniqueTaskId(assignmentId);
-        data.setTaskId(taskId);
+        Assignment assignment = assignmentRepository.findByAssignmentId(data.getAssignment().getAssignmentId());
+        if (assignment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
 
-        Task savedTask = taskRepository.save(data);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedTask);
+        data.setAssignment(assignment);
+        String uniqueTaskId = generateUniqueTaskId(assignment.getAssignmentId());
+        data.setTaskId(uniqueTaskId);
+
+        Task newTask = taskRepository.save(data);
+
+        // Update assignment progress
+        updateAssignmentProgress(assignment);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(newTask);
     }
 
     @Override
     public List<Task> findAllByAssignmentId(String assignmentId) {
-        return taskRepository.findAllByAssignmentId(assignmentId);
+        return taskRepository.findAllByAssignmentAssignmentId(assignmentId);
     }
 
-    // Method to generate unique task ID based on assignment ID
-    private String generateUniqueTaskId(String assignmentId) {
-        // Extract the first three characters of the assignment ID to use as prefix
-        String assignmentPrefix = assignmentId.substring(0, 3);
+    private void updateAssignmentProgress(Assignment assignment) {
+        List<Task> tasks = taskRepository.findAllByAssignmentAssignmentId(assignment.getAssignmentId());
+        long completedTasks = tasks.stream().filter(Task::isStatus).count();
+        int progress = (int) ((double) completedTasks / tasks.size() * 100);
+        assignment.setProgress(progress);
+        assignmentRepository.save(assignment);
+    }
 
-        // Find the maximum task number for the given assignment ID prefix
-        Integer maxTaskNumber = taskRepository.findMaxTaskNumberByAssignmentIdPrefix(assignmentPrefix);
-        if (maxTaskNumber == null) {
-            maxTaskNumber = 0;
-        }
-
-        // Increment the task number for the new task
-        int newTaskNumber = maxTaskNumber + 1;
-
-        // Combine assignment prefix and task number to form the task ID
-        String taskId = assignmentPrefix + "task" + newTaskNumber;
-
-        return taskId;
+    private String generateUniqueTaskId(String assignmentIdPrefix) {
+        Integer maxTaskNumber = taskRepository.findMaxTaskNumberByAssignmentIdPrefix(assignmentIdPrefix);
+        int taskNumber = (maxTaskNumber == null) ? 1 : maxTaskNumber + 1;
+        return assignmentIdPrefix + "task" + taskNumber;
     }
 }
