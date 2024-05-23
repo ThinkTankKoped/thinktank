@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Assignment</title>
+</head>
+<body>
+<h1>Assignment Details</h1>
+<p>Title: <span th:text="${assignment.title}"></span></p>
+<p>Description: <span th:text="${assignment.description}"></span></p>
+<p>Deadline: <span th:text="${assignment.deadline}"></span></p>
+<p>Progress: <span th:text="${assignment.progress} + '%'"></span></p>
+<ul>
+    <li th:each="task : ${assignment.tasks}">
+        <span th:text="${task}"></span>
+        <button th:if="!${task.startsWith('COMPLETE')}" th:attr="onclick=|location.href='/assignments/complete-task/' + '${assignment.assignmentId}' + '?task=' + '${task}'|">Mark as Complete</button>
+    </li>
+</ul>
+<button onclick="location.href='/assignments/main'">Back to Main</button>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Main Page</title>
+</head>
+<body>
+<h1>Assignments</h1>
+<ul>
+    <li th:each="assignment : ${assignments}">
+        <span th:text="${assignment.title}"></span> -
+        <span th:text="${assignment.progress} + '%'"></span>
+        <button th:attr="onclick=|location.href='/assignments/delete/' + '${assignment.assignmentId}'|">Delete</button>
+        <button th:attr="onclick=|location.href='/assignments/edit/' + '${assignment.assignmentId}'|">Edit</button>
+        <button th:attr="onclick=|location.href='/assignments/view/' + '${assignment.assignmentId}'|">View</button>
+    </li>
+</ul>
+<button th:attr="onclick=|location.href='/assignments/create'|">Add Assignment</button>
+</body>
+</html>
