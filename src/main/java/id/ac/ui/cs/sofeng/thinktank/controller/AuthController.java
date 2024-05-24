@@ -31,17 +31,18 @@ public class AuthController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            User user = userRepo.findByUsername(auth.getName());
-            Student student = studentRepo.findByUsername(auth.getName());
-
-            if (user.getRole().equals("Educator")) {
-                return "dashboardmain";
-            }
-            if (user.getRole().equals("Student") && student == null) {
-                return "student/studentForm";
-            }else{
-                return "study/listSchedule";
-            }
+//            User user = userRepo.findByUsername(auth.getName());
+//            Student student = studentRepo.findByUsername(auth.getName());
+//
+//            if (user.getRole().equals("Educator")) {
+//                return "dashboardmain";
+//            }
+//            if (user.getRole().equals("Student") && student == null) {
+//                return "student/studentForm";
+//            }else{
+//                return "study/listSchedule";
+//            }
+            return "main-page";
         }
         return "redirect:/login";
     }
