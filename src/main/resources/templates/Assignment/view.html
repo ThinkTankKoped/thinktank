@@ -11,6 +11,11 @@
             <h1 class="card-title">Assignment Details</h1>
             <p><strong>Title:</strong> <span th:text="${assignment.title}"></span></p>
             <p><strong>Description:</strong> <span th:text="${assignment.description}"></span></p>
+            <ul class="list-group">
+                <li th:each="studyResources : ${assignment.studyResources}" class="list-group-item d-flex justify-content-between align-items-center">
+                    <span th:text="${studyResources}"></span>
+                </li>
+            </ul>
             <p><strong>Deadline:</strong> <span th:text="${assignment.deadline}"></span></p>
             <p><strong>Progress:</strong> <span th:text="${assignment.progress} + '%'"></span></p>
             <ul class="list-group">

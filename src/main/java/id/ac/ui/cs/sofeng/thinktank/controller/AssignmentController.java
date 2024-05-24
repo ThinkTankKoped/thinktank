@@ -65,6 +65,7 @@ public class AssignmentController {
         Assignment assignment = assignmentService.getAssignmentById(assignmentId);
         model.addAttribute("assignment", assignment);
         model.addAttribute("tasks", assignment.getTasks());
+        model.addAttribute("studyResources", assignment.getStudyResources());
         return "Assignment/view";
     }
 
