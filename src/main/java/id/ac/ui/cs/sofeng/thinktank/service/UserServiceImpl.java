@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
             return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getUsername())
                     .password(user.getPassword())
-                    .roles("Student")
+                    .roles(user.getRole())
                     .build();
         } else {
             throw new UsernameNotFoundException("User not found");

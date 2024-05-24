@@ -11,10 +11,11 @@ import java.util.List;
 public interface FeedbackService {
 
     Feedback addFeedback(Feedback data, MultipartFile document) throws IOException;
-    void deleteFeedback(String id);
-    Feedback updateFeedback(Feedback data);
+    void deleteFeedback(int id);
+    Feedback updateFeedback(Feedback data, MultipartFile document) throws IOException;
     Feedback getFeedbackByStudentId(String studentId);
     Resource loadFileAsResource(String fileName) throws Exception;
+    Feedback getFeedbackById(int id);
 
     List<Feedback> getAllFeedback();
     List<Student> getStudentsWithoutFeedback();
