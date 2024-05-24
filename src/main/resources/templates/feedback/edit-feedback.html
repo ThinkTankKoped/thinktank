@@ -48,9 +48,6 @@
             <div>
                 <a th:href="@{'/feedback/downloadFile/' + ${feedback.documentPath}}" class="btn btn-link">Download Current Document</a>
             </div>
-            <div>
-                <button type="button" class="btn btn-danger" th:attr="onclick=|location.href='/feedback/deleteDocument/' + ${feedback.id}|">Delete Current Document</button>
-            </div>
         </div>
         <div class="form-group mt-3">
             <label for="newDocument">Upload New Document</label>
