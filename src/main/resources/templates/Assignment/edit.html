@@ -37,20 +37,20 @@
             const taskCount = taskList.getElementsByTagName('input').length;
             const taskDiv = document.createElement('div');
             taskDiv.classList.add('input-group', 'mb-2');
-            taskDiv.innerHTML = `<input type="text" name="tasks[${taskCount}]" class="form-control" required/>
+            taskDiv.innerHTML = `<input type="text" name="tasks" class="form-control" required/>
                                  <button type="button" class="btn btn-danger" onclick="removeElement(this)">Remove</button>`;
             taskList.appendChild(taskDiv);
             updateRemoveButtons();
         }
 
         function addStudyResources() {
-            const taskList = document.getElementById('studyResources');
-            const resourcesCount = taskList.getElementsByTagName('input').length;
+            const resourceList = document.getElementById('studyResources');
+            const resourceCount = resourceList.getElementsByTagName('input').length;
             const resourceDiv = document.createElement('div');
             resourceDiv.classList.add('input-group', 'mb-2');
-            resourceDiv.innerHTML = `<input type="text" name="studyResources[${resourcesCount}]" class="form-control" required/>
+            resourceDiv.innerHTML = `<input type="text" name="studyResources" class="form-control" required/>
                                      <button type="button" class="btn btn-danger" onclick="removeElement(this)">Remove</button>`;
-            taskList.appendChild(resourceDiv);
+            resourceList.appendChild(resourceDiv);
             updateRemoveButtons();
         }
 
@@ -107,7 +107,7 @@
                 <div class="mb-3">
                     <label for="studyResources" class="form-label">Study Resources:</label>
                     <div id="studyResources" class="study-resources-list">
-                        <div th:each="studyResources, stat : *{studyResources}" class="input-group mb-2">
+                        <div th:each="resource, stat : *{studyResources}" class="input-group mb-2">
                             <input type="text" th:field="*{studyResources[__${stat.index}__]}" class="form-control" required/>
                             <button type="button" class="btn btn-danger" onclick="removeElement(this)">Remove</button>
                         </div>
