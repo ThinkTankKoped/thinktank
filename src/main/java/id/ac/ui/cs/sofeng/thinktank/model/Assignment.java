@@ -40,4 +40,8 @@ public class Assignment {
 
     @Column(name = "is_completed", nullable = false)
     private boolean isCompleted = false; // Default value
+
+    @ElementCollection
+    @Column(name = "studyResources")
+    private List<String> studyResources;
 }

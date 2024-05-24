@@ -37,6 +37,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         existingAssignment.setTasks(assignment.getTasks());
         existingAssignment.setProgress(calculateProgress(existingAssignment));
         existingAssignment.setCompleted(assignment.isCompleted());
+        existingAssignment.setStudyResources(assignment.getStudyResources());
         return assignmentRepository.save(existingAssignment);
     }
 
