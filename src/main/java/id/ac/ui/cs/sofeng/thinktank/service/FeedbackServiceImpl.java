@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,20 +51,36 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public void deleteFeedback(String id) {
-        feedbackRepository.findByStudentId(id).ifPresent(feedback -> {
+    public void deleteFeedback(int id) {
+        feedbackRepository.findById(id).ifPresent(feedback -> {
             try {
-                Files.deleteIfExists(Paths.get(feedback.getDocumentPath()));
+                Files.deleteIfExists(Paths.get("resources/docs/"+feedback.getDocumentPath()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            feedbackRepository.deleteByStudentId(id);
+            feedbackRepository.deleteById(id);
         });
     }
 
     @Override
-    public Feedback updateFeedback(Feedback data) {
-        return null;
+    public Feedback updateFeedback(Feedback data, MultipartFile newDocument) throws IOException {
+
+        if (newDocument != null && !newDocument.isEmpty()) {
+
+            Files.deleteIfExists(Paths.get("resources/docs/"+data.getDocumentPath()));
+
+
+            String fileName = String.valueOf(data.getStudentId()) + StringUtils.cleanPath(newDocument.getOriginalFilename());
+            String uploadDir = "resources/docs/";
+            String uploadPath = uploadDir + fileName;
+            Path uploadAbsolutePath = Paths.get(uploadPath);
+            Files.createDirectories(uploadAbsolutePath.getParent());
+            Files.copy(newDocument.getInputStream(), uploadAbsolutePath);
+            data.setDocumentPath(uploadPath);
+        }
+        Feedback oldData = feedbackRepository.findByStudentId(data.getStudentId()).orElse(null);
+        data.setDocumentPath(oldData.getDocumentPath());
+        return feedbackRepository.save(data);
     }
 
     @Override
@@ -83,6 +100,11 @@ public class FeedbackServiceImpl implements FeedbackService {
         } catch (Exception e) {
             throw new Exception("File not found " + fileName, e);
         }
+    }
+
+    @Override
+    public Feedback getFeedbackById(int id) {
+        return feedbackRepository.findById(id).orElse(null);
     }
 
     @Override

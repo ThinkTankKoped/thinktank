@@ -72,10 +72,30 @@ public class FeedbackController {
         return "student/studentForm";
     }
 
-    @GetMapping("/students/without-feedback")
+    @GetMapping("/no-feedback")
     public String getStudentsWithoutFeedback(Model model) {
+
         List<Student> studentsWithoutFeedback = feedbackService.getStudentsWithoutFeedback();
         model.addAttribute("students", studentsWithoutFeedback);
         return "feedback/studentWithoutFeedback";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteFeedback(@PathVariable("id") int id) {
+        feedbackService.deleteFeedback(id);
+        return "redirect:/feedback/list";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editFeedbackForm(@PathVariable("id") int id, Model model) {
+        Feedback feedback = feedbackService.getFeedbackById(id);
+        model.addAttribute("feedback", feedback);
+        return "feedback/edit-feedback";
+    }
+
+    @PostMapping("/edit")
+    public String editFeedback(@ModelAttribute Feedback feedback, @RequestParam("newDocument") MultipartFile newDocument) throws IOException {
+        feedbackService.updateFeedback(feedback, newDocument);
+        return "redirect:/feedback/list";
     }
 }

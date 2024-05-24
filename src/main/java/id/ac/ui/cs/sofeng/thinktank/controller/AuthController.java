@@ -43,7 +43,7 @@ public class AuthController {
                 return "study/listSchedule";
             }
         }
-        return "redirect:/home";
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
@@ -56,10 +56,6 @@ public class AuthController {
         return "sign-up-basic";
     }
 
-    @GetMapping("/home")
-    public String homePage() {
-        return "main-product";
-    }
 
     @GetMapping("/logout")
     public String customLogout(HttpServletRequest request, HttpServletResponse response) {
