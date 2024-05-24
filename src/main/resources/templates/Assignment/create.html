@@ -27,30 +27,66 @@
         function addTask() {
             const taskList = document.getElementById('tasks');
             const taskCount = taskList.getElementsByTagName('input').length;
-            const newTask = document.createElement('input');
-            newTask.type = 'text';
-            newTask.name = `tasks[${taskCount}]`;
-            newTask.classList.add('form-control', 'mb-2');
-            taskList.appendChild(newTask);
+            const taskDiv = document.createElement('div');
+            taskDiv.classList.add('input-group', 'mb-2');
+            taskDiv.innerHTML = `<input type="text" name="tasks[${taskCount}]" class="form-control" required/>
+                                 <button type="button" class="btn btn-danger" onclick="removeElement(this)">Remove</button>`;
+            taskList.appendChild(taskDiv);
+            updateRemoveButtons();
         }
 
         function addStudyResources() {
             const taskList = document.getElementById('studyResources');
             const resourcesCount = taskList.getElementsByTagName('input').length;
-            const newResource = document.createElement('input');
-            newResource.type = 'text';
-            newResource.name = `studyResources[${resourcesCount}]`;
-            newResource.classList.add('form-control', 'mb-2');
-            taskList.appendChild(newResource);
+            const resourceDiv = document.createElement('div');
+            resourceDiv.classList.add('input-group', 'mb-2');
+            resourceDiv.innerHTML = `<input type="text" name="studyResources[${resourcesCount}]" class="form-control" required/>
+                                     <button type="button" class="btn btn-danger" onclick="removeElement(this)">Remove</button>`;
+            taskList.appendChild(resourceDiv);
+            updateRemoveButtons();
+        }
+
+        function removeElement(element) {
+            element.parentNode.remove();
+            updateRemoveButtons();
+        }
+
+        function updateRemoveButtons() {
+            const taskList = document.getElementById('tasks');
+            const taskCount = taskList.getElementsByTagName('div').length;
+            const taskRemoveButtons = taskList.getElementsByTagName('button');
+
+            for (const button of taskRemoveButtons) {
+                button.disabled = (taskCount <= 1);
+            }
+
+            const resourceList = document.getElementById('studyResources');
+            const resourceCount = resourceList.getElementsByTagName('div').length;
+            const resourceRemoveButtons = resourceList.getElementsByTagName('button');
+
+            for (const button of resourceRemoveButtons) {
+                button.disabled = (resourceCount <= 1);
+            }
+        }
+
+        function validateForm() {
+            const inputs = document.querySelectorAll('input[required]');
+            for (const input of inputs) {
+                if (!input.value.trim()) {
+                    alert('Please fill out all required fields with valid text.');
+                    return false;
+                }
+            }
+            return true;
         }
     </script>
 </head>
-<body>
+<body onload="updateRemoveButtons()">
 <div class="container mt-5">
     <div class="card">
         <div class="card-body">
             <h1 class="card-title">Create Assignment</h1>
-            <form th:action="@{/assignments/create}" th:object="${assignment}" method="post">
+            <form th:action="@{/assignments/create}" th:object="${assignment}" method="post" onsubmit="return validateForm()">
                 <div class="mb-3">
                     <label for="title" class="form-label">Title:</label>
                     <input type="text" id="title" th:field="*{title}" class="form-control" required/>
@@ -61,8 +97,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="studyResources" class="form-label">Study Resources:</label>
-                    <div id="studyResources">
-                        <input type="text" name="studyResources[0]" class="form-control mb-2" required/>
+                    <div id="studyResources" class="study-resources-list">
+                        <div class="input-group mb-2">
+                            <input type="text" name="studyResources[0]" class="form-control" required/>
+                            <button type="button" class="btn btn-danger" onclick="removeElement(this)">Remove</button>
+                        </div>
                     </div>
                     <button type="button" class="btn btn-secondary" onclick="addStudyResources()">Add Resource</button>
                 </div>
@@ -72,8 +111,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="tasks" class="form-label">Tasks:</label>
-                    <div id="tasks">
-                        <input type="text" name="tasks[0]" class="form-control mb-2" required/>
+                    <div id="tasks" class="tasks-list">
+                        <div class="input-group mb-2">
+                            <input type="text" name="tasks[0]" class="form-control" required/>
+                            <button type="button" class="btn btn-danger" onclick="removeElement(this)">Remove</button>
+                        </div>
                     </div>
                     <button type="button" class="btn btn-secondary" onclick="addTask()">Add Task</button>
                 </div>
