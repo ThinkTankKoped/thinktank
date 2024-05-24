@@ -28,10 +28,10 @@ public class FeedbackRestController {
 //        return feedback;
 //    }
 
-    @GetMapping("/deleteFeedback/{id}")
-    public void deleteFeedback(@PathVariable String id) {
-        feedbackService.deleteFeedback(id);
-    }
+//    @GetMapping("/deleteFeedback/{id}")
+//    public void deleteFeedback(@PathVariable String id) {
+//        feedbackService.deleteFeedback(id);
+//    }
 
     @GetMapping("/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
