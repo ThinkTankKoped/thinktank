@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -34,12 +36,23 @@ public class AssignmentServiceImpl implements AssignmentService {
         existingAssignment.setTitle(assignment.getTitle());
         existingAssignment.setDescription(assignment.getDescription());
         existingAssignment.setDeadline(assignment.getDeadline());
-        existingAssignment.setTasks(assignment.getTasks());
+
+        // Ensure tasks list is initialized and does not contain null elements
+        List<String> tasks = assignment.getTasks() != null ? assignment.getTasks() : new ArrayList<>();
+        tasks.removeIf(Objects::isNull); // Remove any null elements
+        existingAssignment.setTasks(tasks);
+
         existingAssignment.setProgress(calculateProgress(existingAssignment));
         existingAssignment.setCompleted(assignment.isCompleted());
-        existingAssignment.setStudyResources(assignment.getStudyResources());
+
+        // Ensure study resources list is initialized and does not contain null elements
+        List<String> studyResources = assignment.getStudyResources() != null ? assignment.getStudyResources() : new ArrayList<>();
+        studyResources.removeIf(Objects::isNull); // Remove any null elements
+        existingAssignment.setStudyResources(studyResources);
+
         return assignmentRepository.save(existingAssignment);
     }
+
 
     @Override
     public void deleteAssignment(String assignmentId) {
@@ -94,11 +107,17 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     private int calculateProgress(Assignment assignment) {
         List<String> tasks = assignment.getTasks();
-        int totalTasks = tasks.size();
-        int completedTasks = (int) tasks.stream().filter(task -> task.startsWith("COMPLETE: ")).count();
-        if (totalTasks == 0) {
+
+        if (tasks == null || tasks.isEmpty()) {
             return 0;
         }
+
+        int totalTasks = tasks.size();
+        int completedTasks = (int) tasks.stream()
+                .filter(Objects::nonNull) // Ensure tasks are not null
+                .filter(task -> task.startsWith("COMPLETE: "))
+                .count();
+
         return (completedTasks * 100) / totalTasks;
     }
 }
