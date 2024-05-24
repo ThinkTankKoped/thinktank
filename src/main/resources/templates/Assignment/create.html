@@ -29,20 +29,20 @@
             const taskCount = taskList.getElementsByTagName('input').length;
             const taskDiv = document.createElement('div');
             taskDiv.classList.add('input-group', 'mb-2');
-            taskDiv.innerHTML = `<input type="text" name="tasks[${taskCount}]" class="form-control" required/>
+            taskDiv.innerHTML = `<input type="text" name="tasks" class="form-control" required/>
                                  <button type="button" class="btn btn-danger" onclick="removeElement(this)">Remove</button>`;
             taskList.appendChild(taskDiv);
             updateRemoveButtons();
         }
 
         function addStudyResources() {
-            const taskList = document.getElementById('studyResources');
-            const resourcesCount = taskList.getElementsByTagName('input').length;
+            const resourceList = document.getElementById('studyResources');
+            const resourceCount = resourceList.getElementsByTagName('input').length;
             const resourceDiv = document.createElement('div');
             resourceDiv.classList.add('input-group', 'mb-2');
-            resourceDiv.innerHTML = `<input type="text" name="studyResources[${resourcesCount}]" class="form-control" required/>
+            resourceDiv.innerHTML = `<input type="text" name="studyResources" class="form-control" required/>
                                      <button type="button" class="btn btn-danger" onclick="removeElement(this)">Remove</button>`;
-            taskList.appendChild(resourceDiv);
+            resourceList.appendChild(resourceDiv);
             updateRemoveButtons();
         }
 
@@ -99,7 +99,7 @@
                     <label for="studyResources" class="form-label">Study Resources:</label>
                     <div id="studyResources" class="study-resources-list">
                         <div class="input-group mb-2">
-                            <input type="text" name="studyResources[0]" class="form-control" required/>
+                            <input type="text" name="studyResources" class="form-control" required/>
                             <button type="button" class="btn btn-danger" onclick="removeElement(this)">Remove</button>
                         </div>
                     </div>
@@ -113,7 +113,7 @@
                     <label for="tasks" class="form-label">Tasks:</label>
                     <div id="tasks" class="tasks-list">
                         <div class="input-group mb-2">
-                            <input type="text" name="tasks[0]" class="form-control" required/>
+                            <input type="text" name="tasks" class="form-control" required/>
                             <button type="button" class="btn btn-danger" onclick="removeElement(this)">Remove</button>
                         </div>
                     </div>
