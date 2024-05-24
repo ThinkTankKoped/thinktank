@@ -32,7 +32,7 @@ public class AssignmentController {
         String role = user.getRole();
 
         if ("Educator".equals(role)) {
-            return "dashboardmain"; //
+            return "redirect:/assignments/access-denied-assignment"; //
         } else if ("Student".equals(role)) {
             Student studentData = studentRepository.findByUsername(username);
             String npm = studentData.getNpm();
@@ -43,7 +43,12 @@ public class AssignmentController {
         }
 
 
-        return "dashboardmain";
+        return "access-denied-assignment";
+    }
+
+    @GetMapping("/access-denied-assignment")
+    public String accessDeniedAssignment() {
+        return "access-denied-assignment"; // Remove the leading slash
     }
 
 
