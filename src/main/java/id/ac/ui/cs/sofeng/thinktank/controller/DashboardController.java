@@ -38,7 +38,7 @@ public class DashboardController {
             model.addAttribute("students", students);
             return "dashboardmain";
         } else {
-            return "study/listSchedule";
+            return "access-denied-assignment";
         }
     }
 

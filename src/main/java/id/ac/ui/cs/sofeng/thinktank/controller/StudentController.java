@@ -23,7 +23,7 @@ public class StudentController {
         String studentName = SecurityContextHolder.getContext().getAuthentication().getName();
         String role = userRepository.findByUsername(studentName).getRole();
         if (role.equals("Educator")) {
-            return "dashboardmain";
+            return "access-denied-assignment";
         } else{
         Student student = new Student();
         model.addAttribute("student", student);
@@ -56,7 +56,7 @@ public class StudentController {
                 student1.setProgress(student.getProgress());
             }
             studentService.createNewStudent(student);
-            return "study/listSchedule";
+            return "main-page";
         }
         else{
             return "redirect:/student/studentform";
@@ -73,6 +73,6 @@ public class StudentController {
         model.addAttribute("students", students);
         return "student/studentList";
     }else {
-        return "study/listSchedule";
+        return "access-denied-assignment";
     }   }
 }
