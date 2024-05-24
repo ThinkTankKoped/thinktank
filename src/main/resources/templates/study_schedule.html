@@ -7,19 +7,15 @@
     <meta charset="UTF-8">
     <title>Study Schedule CRUD</title>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            padding: 8px;
-            text-align: center;
+        body {
+            background-color: cadetblue;
         }
 
         h2 {
             font-family: sans-serif;
             font-size: 1.5em;
             text-transform: uppercase;
+            color: white;
         }
 
         strong {
@@ -32,27 +28,29 @@
         }
     </style>
 </head>
-<body>
-<h2>Study Schedule</h2>
+<body class="text-white">
+<div class="container mt-5">
+    <h2 class="mb-4">Study Schedule</h2>
 
-<a th:href="@{'/schedules/new'}">Add Schedule</a>
-<a th:href="@{'/schedules/student/detail'}">Edit Schedule</a>
+    <div class="mb-3">
+        <a th:href="@{'/schedules/new'}" class="btn btn-primary me-2">Add Schedule</a>
+        <a th:href="@{'/schedules/student/detail'}" class="btn btn-secondary">Edit Schedule</a>
+    </div>
 
-<table class="table table-dark table-striped">
-    <thead class="table-primary">
-    <tr>
-        <th></th>
-        <!--        <th th:each="hour : ${hoursOfDay}" th:text="${hour}"></th>-->
-        <th th:each="day : ${daysOfWeek}" th:text="${day}"></th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Iterate over each row of the study schedule -->
-    <tr th:each="row, rowIdx : ${studySchedule}">
-        <td class="table-primary" th:text="${hoursOfDay[rowIdx.index]}"></td>
-        <td class="table-secondary" th:each="cell : ${row}" th:text="${cell.description}"></td>
-    </tr>
-    </tbody>
-</table>
+    <table class="table table-dark table-striped">
+        <thead class="table-primary">
+        <tr>
+            <th></th>
+            <th th:each="day : ${daysOfWeek}" th:text="${day}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="row, rowIdx : ${studySchedule}">
+            <td class="table-primary" th:text="${hoursOfDay[rowIdx.index]}"></td>
+            <td class="table-secondary" th:each="cell : ${row}" th:text="${cell.description}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

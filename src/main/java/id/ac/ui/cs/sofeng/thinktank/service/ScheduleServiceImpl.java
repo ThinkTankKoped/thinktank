@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -76,7 +77,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             return null;
         }
         List<Schedule> overlaps = scheduleRepository.findByStudentIdAndDayOfWeekAndStartTimeBetween(schedule.getStudentId(), schedule.getDayOfWeek(), schedule.getStartTime(), schedule.getEndTime());
-        if (!overlaps.isEmpty()) {
+        if (!overlaps.isEmpty() && Objects.isNull(schedule.getId())) {
             return null;
         }
         return scheduleRepository.save(schedule);
