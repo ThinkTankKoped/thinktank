@@ -1,4 +1,5 @@
 package id.ac.ui.cs.sofeng.thinktank.controller;
+import id.ac.ui.cs.sofeng.thinktank.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,18 +19,27 @@ public class DashboardController {
     private DashboardService dashboardService;
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private UserRepository userRepository;
     @GetMapping("/dashboardmain")
     public String dashboardPage(Model model) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        List <Dashboard> dashboard = dashboardService.findDashboardByEducator(username);
-        List <Student> students = new ArrayList<>();
-        for (Dashboard dash : dashboard) {
-            String val1 = dash.getStudentname();
-            students.add(studentService.findStudent(val1));
+        String role = userRepository.findByUsername(username).getRole();
+        if (role.equals("Educator")) {
+
+
+            List<Dashboard> dashboard = dashboardService.findDashboardByEducator(username);
+            List<Student> students = new ArrayList<>();
+            for (Dashboard dash : dashboard) {
+                String val1 = dash.getStudentname();
+                students.add(studentService.findStudent(val1));
+            }
+            model.addAttribute("dashboard", dashboard);
+            model.addAttribute("students", students);
+            return "dashboardmain";
+        } else {
+            return "study/listSchedule";
         }
-        model.addAttribute("dashboard", dashboard);
-        model.addAttribute("students", students);
-        return "dashboardmain";
     }
 
     @GetMapping("dashboardmain/delete")

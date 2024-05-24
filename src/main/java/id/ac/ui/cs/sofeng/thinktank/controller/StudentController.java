@@ -23,14 +23,35 @@ public class StudentController {
     }
     @PostMapping("/studentform")
     public String formSubmit(@ModelAttribute Student student) {
+        String studentName = SecurityContextHolder.getContext().getAuthentication().getName();
         Student student1 = new Student();
-        student1.setUsername(student.getUsername());
-        student1.setNpm(student.getNpm());
-        student1.setGrades(student.getGrades());
-        student1.setAttendance(student.getAttendance());
-        student1.setProgress(student.getProgress());
-        studentService.createNewStudent(student);
-        return "redirect:/home";
+        if(studentService.findStudent(student.getUsername()) != null || studentService.findStudent(student.getNpm()) != null|| student.getUsername().equals(studentName)){
+            student1.setUsername(student.getUsername());
+            student1.setNpm(student.getNpm());
+            if(student.getGrades() == 0.0f){
+                student1.setGrades(0);
+            }
+            else{
+                student1.setGrades(student.getGrades());
+            }
+            if (student.getAttendance() == 0){
+                student1.setAttendance(0);
+            }
+            else{
+                student1.setAttendance(student.getAttendance());
+            }
+            if (student.getProgress() == 0){
+                student1.setProgress(0);
+            }
+            else{
+                student1.setProgress(student.getProgress());
+            }
+            studentService.createNewStudent(student);
+            return "redirect:/home";
+        }
+        else{
+            return "redirect:/student/studentform";
+        }
     }
 
     @GetMapping("/list")
