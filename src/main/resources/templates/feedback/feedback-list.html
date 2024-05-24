@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Feedback List</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Student ID</th>
+            <th scope="col">Feedback</th>
+            <th scope="col">Document</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="feedback : ${feedbacks}">
+            <td th:text="${feedback.studentId}"></td>
+            <td th:text="${feedback.message}"></td>
+            <td>
+                <a th:href="@{'/feedback/downloadFile/' + ${feedback.documentPath}}">Download</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

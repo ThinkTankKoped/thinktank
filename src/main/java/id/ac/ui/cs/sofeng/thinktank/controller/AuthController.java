@@ -35,7 +35,7 @@ public class AuthController {
             Student student = studentRepo.findByUsername(auth.getName());
 
             if (user.getRole().equals("Educator")) {
-                return "main-admin";
+                return "dashboardmain";
             }
             if (user.getRole().equals("Student") && student == null) {
                 return "student/studentForm";
