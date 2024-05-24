@@ -11,6 +11,7 @@
 <div class="container mt-5">
     <h2 class="mb-4">Feedback Form</h2>
     <form action="/feedback" th:action="@{/feedback/submitFeedback}" th:object="${feedback}" method="post" enctype="multipart/form-data">
+        <input  th:value="${npm}" name="studentId">
         <div class="form-group">
             <label for="title">Title</label>
             <input type="text" class="form-control" id="title" name="title" th:field="*{title}" required>

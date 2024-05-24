@@ -24,6 +24,6 @@ public class Feedback {
     @Column(name = "document")
     private String documentPath;
 
-    @Column(name = "studentid")
-    private int studentId;
+    @Column(name = "studentid", unique = true)
+    private String studentId;
 }

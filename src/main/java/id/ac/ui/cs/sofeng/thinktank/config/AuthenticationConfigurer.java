@@ -20,7 +20,7 @@ public class AuthenticationConfigurer {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home", "/register", "/css/**", "/js/**", "/img/**", "/scss/**", "/fonts/**").permitAll()
+                        .requestMatchers("/", "/home", "/register").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(httpSecurityFormLoginConfigurer -> {
                     httpSecurityFormLoginConfigurer.loginPage("/login").permitAll()
