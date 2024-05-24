@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: cadetblue;
+            color: white;
+        }
+        .card {
+            background-color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            color: black;
+        }
+        .btn-primary {
+            background-color: #004085;
+            border-color: #004085;
+        }
+        .list-group-item {
+            background-color: #ffffff;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Home Page</h2>
+    <div class="list-group">
+        <a href="/feedback/list" class="list-group-item list-group-item-action btn btn-primary">Feedback</a>
+        <div sec:authorize="hasRole('Student')">
+            <a href="/schedules/student" class="list-group-item list-group-item-action btn btn-primary">Schedule</a>
+            <a href="/assignments/main" class="list-group-item list-group-item-action btn btn-primary">Assignment Tracker</a>
+            <a href="/student/studentform" class="list-group-item list-group-item-action btn btn-primary">Form Student</a>
+        </div>
+        <div sec:authorize="hasRole('Educator')">
+            <a href="/dashboardmain" class="list-group-item list-group-item-action btn btn-primary">Custom Dashboard</a>
+        </div>
+        <a href="/logout" class="list-group-item list-group-item-action btn btn-primary">Logout</a>
+    </div>
+</div>
+</body>
+</html>
