@@ -1,4 +1,5 @@
 package id.ac.ui.cs.sofeng.thinktank.controller;
+import id.ac.ui.cs.sofeng.thinktank.repository.UserRepository;
 import id.ac.ui.cs.sofeng.thinktank.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,17 +16,25 @@ import java.util.List;
 public class StudentController {
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private UserRepository userRepository;
     @GetMapping("/studentform")
     public String form(Model model) {
+        String studentName = SecurityContextHolder.getContext().getAuthentication().getName();
+        String role = userRepository.findByUsername(studentName).getRole();
+        if (role.equals("Educator")) {
+            return "dashboardmain";
+        } else{
         Student student = new Student();
         model.addAttribute("student", student);
         return "student/studentform";
+    }
     }
     @PostMapping("/studentform")
     public String formSubmit(@ModelAttribute Student student) {
         String studentName = SecurityContextHolder.getContext().getAuthentication().getName();
         Student student1 = new Student();
-        if(studentService.findStudent(student.getUsername()) != null || studentService.findStudent(student.getNpm()) != null|| student.getUsername().equals(studentName)){
+        if(studentService.findStudent(student.getUsername()) != null && studentService.findStudent(student.getNpm()) != null && student.getUsername().equals(studentName)){
             student1.setUsername(student.getUsername());
             student1.setNpm(student.getNpm());
             if(student.getGrades() == 0.0f){
@@ -47,7 +56,7 @@ public class StudentController {
                 student1.setProgress(student.getProgress());
             }
             studentService.createNewStudent(student);
-            return "redirect:/home";
+            return "study/listSchedule";
         }
         else{
             return "redirect:/student/studentform";
@@ -57,9 +66,13 @@ public class StudentController {
     @GetMapping("/list")
     public String list(Model model) {
         String educatorsname = SecurityContextHolder.getContext().getAuthentication().getName();
+        String role = userRepository.findByUsername(educatorsname).getRole();
+        if (role.equals("Educator")) {
         List<Student> students = studentService.getAllStudent();
         model.addAttribute("educatorsname", educatorsname);
         model.addAttribute("students", students);
         return "student/studentList";
-    }
+    }else {
+        return "study/listSchedule";
+    }   }
 }
