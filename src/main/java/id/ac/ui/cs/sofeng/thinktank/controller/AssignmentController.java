@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import id.ac.ui.cs.sofeng.thinktank.model.User;
+import id.ac.ui.cs.sofeng.thinktank.repository.UserRepository;
 
 import java.util.List;
 
@@ -20,17 +22,30 @@ public class AssignmentController {
 
     private final AssignmentService assignmentService;
     private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("/main")
     public String mainPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Student studentData = studentRepository.findByUsername(auth.getName());
-        String npm = studentData.getNpm();
+        String username = auth.getName();
+        User user = userRepository.findByUsername(username);
+        String role = user.getRole();
 
-        List<Assignment> assignments = assignmentService.getAllAssignmentsByNpm(npm);
-        model.addAttribute("assignments", assignments);
-        return "Assignment/main";
+        if ("Educator".equals(role)) {
+            return "dashboardmain"; //
+        } else if ("Student".equals(role)) {
+            Student studentData = studentRepository.findByUsername(username);
+            String npm = studentData.getNpm();
+
+            List<Assignment> assignments = assignmentService.getAllAssignmentsByNpm(npm);
+            model.addAttribute("assignments", assignments);
+            return "Assignment/main";
+        }
+
+
+        return "dashboardmain";
     }
+
 
     @GetMapping("/create")
     public String createPage(Model model) {
